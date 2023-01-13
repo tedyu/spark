@@ -358,7 +358,7 @@ class ExecutorPodsAllocator(
     // existing PVCs
     val remainingSlotFromPendingPods = maxPendingPods - totalNotRunningPodCount
     if (remainingSlotFromPendingPods > 0 && podsToAllocateWithRpId.size > 0 &&
-        !(snapshots.isEmpty && podAllocOnPVC && maxPVCs <= PVC_COUNTER.get())) {
+        !snapshots.isEmpty && (!podAllocOnPVC || maxPVCs > PVC_COUNTER.get())) {
       ExecutorPodsAllocator.splitSlots(podsToAllocateWithRpId, remainingSlotFromPendingPods)
         .foreach { case ((rpId, podCountForRpId, targetNum), sharedSlotFromPendingPods) =>
         val numMissingPodsForRpId = targetNum - podCountForRpId
